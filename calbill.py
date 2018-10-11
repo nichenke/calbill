@@ -19,6 +19,7 @@ API Explorer:
 
 from __future__ import print_function
 import datetime
+from collections import defaultdict
 
 from dateutil import parser
 from googleapiclient.discovery import build
@@ -88,6 +89,8 @@ def main():
 
         if not events:
             print('No upcoming events found.')
+
+        day_totals = defaultdict(int)
         for event in events:
             start = event['start'].get('dateTime')
             end = event['end'].get('dateTime')
@@ -97,7 +100,11 @@ def main():
             hours = (end - start).total_seconds() / 3600
             this_week_total += hours
 
-            print(start, end, hours, event['summary'])
+            day_totals[start.date()] += hours
+
+        for day, total in day_totals.items():
+            # NOTE: format is for CVS pasting to excel, 2 empty colums between summary and hours.
+            print("Coding - {0},,, {1}".format(day, total))
 
         print('Hours for week starting {0}: {1}'.format(timeMin, this_week_total))
 
