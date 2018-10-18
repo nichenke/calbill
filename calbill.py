@@ -44,7 +44,7 @@ def billing_weeks():
 
     while True:
         end = start + datetime.timedelta(7)
-        if end > now:
+        if start > now:
             break
 
         yield (start.isoformat(), end.isoformat())
